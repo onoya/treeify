@@ -1,11 +1,18 @@
 import { load, YAMLException } from 'js-yaml';
-import { ChangeEventHandler, useEffect, useState } from 'react';
+import {
+  ChangeEventHandler,
+  KeyboardEventHandler,
+  useEffect,
+  useState,
+} from 'react';
 import treeify, { TreeObject } from 'treeify';
 
 const defaultData = `hello:
   world:
 john:
 doe:`;
+
+const TAB_SIZE = 2;
 
 function App() {
   const [yml, setYml] = useState(defaultData);
@@ -33,9 +40,31 @@ function App() {
 
   const handleCopyToClipboard = () => navigator.clipboard.writeText(tree);
 
+  const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
+    if (e.key === 'Tab' && !e.shiftKey) {
+      e.preventDefault();
+      const { selectionStart, selectionEnd } = e.currentTarget;
+
+      const tabString = ' '.repeat(TAB_SIZE);
+
+      setYml(
+        (prev) =>
+          prev.substring(0, selectionStart) +
+          tabString +
+          prev.substring(selectionEnd)
+      );
+    }
+  };
+
   return (
     <main>
-      <textarea onChange={handleTextChange} value={yml} cols={50} rows={10} />
+      <textarea
+        onChange={handleTextChange}
+        value={yml}
+        onKeyDown={handleKeyDown}
+        cols={50}
+        rows={10}
+      />
 
       {error && <span>{error}</span>}
 
