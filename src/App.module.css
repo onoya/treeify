@@ -1,5 +1,6 @@
 .title {
     text-align: center;
+    font-size: 3rem;
 }
 
 .container {
@@ -17,7 +18,15 @@
 
 .error {
     grid-row: 2;
-    color: red;
+    background-color: #eb4d4b;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+button.copy {
+    padding: .75rem 1.5rem;
+    cursor: pointer;
 }
 
 .result {
@@ -28,6 +37,7 @@
 }
 
 .result pre {
+    background-color: #dfe6e9;
     height: 500px;
     margin: 0;
     width: 100%;

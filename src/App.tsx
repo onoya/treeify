@@ -7,6 +7,7 @@ import YamlEditor from './YamlEditor';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-one_dark';
+import swal from 'sweetalert';
 
 const defaultData = `hello:
   world:
@@ -43,7 +44,13 @@ function App() {
     localStorage.setItem(SANBOX_HISTORY_KEY, value);
   };
 
-  const handleCopyToClipboard = () => navigator.clipboard.writeText(tree);
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(tree);
+    swal({
+      text: 'Successfully copied to clipboard!',
+      icon: 'success',
+    });
+  };
 
   return (
     <main>
@@ -57,7 +64,9 @@ function App() {
         {error && <span className={styles.error}>{error}</span>}
 
         <div className={styles.result}>
-          <button onClick={handleCopyToClipboard}>Copy</button>
+          <button onClick={handleCopyToClipboard} className={styles.copy}>
+            Copy
+          </button>
 
           <pre>{tree}</pre>
         </div>
