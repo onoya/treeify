@@ -1,18 +1,17 @@
 import { load, YAMLException } from 'js-yaml';
-import {
-  ChangeEventHandler,
-  KeyboardEventHandler,
-  useEffect,
-  useState,
-} from 'react';
+import { useEffect, useState } from 'react';
+import AceEditor from 'react-ace';
 import treeify, { TreeObject } from 'treeify';
+
+import 'ace-builds/src-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/mode-yaml';
+import 'ace-builds/src-noconflict/theme-github';
 
 const defaultData = `hello:
   world:
 john:
-doe:`;
-
-const TAB_SIZE = 2;
+doe:
+`;
 
 function App() {
   const [yml, setYml] = useState(defaultData);
@@ -34,36 +33,19 @@ function App() {
     }
   }, [yml]);
 
-  const handleTextChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    setYml(e.target.value);
-  };
-
   const handleCopyToClipboard = () => navigator.clipboard.writeText(tree);
-
-  const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === 'Tab' && !e.shiftKey) {
-      e.preventDefault();
-      const { selectionStart, selectionEnd } = e.currentTarget;
-
-      const tabString = ' '.repeat(TAB_SIZE);
-
-      setYml(
-        (prev) =>
-          prev.substring(0, selectionStart) +
-          tabString +
-          prev.substring(selectionEnd)
-      );
-    }
-  };
 
   return (
     <main>
-      <textarea
-        onChange={handleTextChange}
+      <AceEditor
+        mode="yaml"
+        theme="github"
+        tabSize={2}
+        showPrintMargin={false}
+        showGutter={false}
         value={yml}
-        onKeyDown={handleKeyDown}
-        cols={50}
-        rows={10}
+        onChange={setYml}
+        editorProps={{ $blockScrolling: true }}
       />
 
       {error && <span>{error}</span>}
