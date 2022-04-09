@@ -14,8 +14,12 @@ john:
 doe:
 `;
 
+const SANBOX_HISTORY_KEY = 'sandbox-history';
+
 function App() {
-  const [yml, setYml] = useState(defaultData);
+  const [yml, setYml] = useState(
+    () => localStorage.getItem(SANBOX_HISTORY_KEY) ?? defaultData
+  );
   const [tree, setTree] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -26,13 +30,18 @@ function App() {
       setError(null);
     } catch (err) {
       if (err instanceof YAMLException) {
-        setError(`Invalid yaml format: ${err.reason}`);
+        setError(`Invalid yaml format`);
       } else {
         setError('Something went wrong');
-        console.error(err);
       }
+      console.error(err);
     }
   }, [yml]);
+
+  const handleChange = (value: string) => {
+    setYml(value);
+    localStorage.setItem(SANBOX_HISTORY_KEY, value);
+  };
 
   const handleCopyToClipboard = () => navigator.clipboard.writeText(tree);
 
@@ -41,7 +50,10 @@ function App() {
       <h1 className={styles.title}>TREEIFY</h1>
 
       <div className={styles.container}>
-        <YamlEditor value={yml} onChange={setYml} />
+        <div>
+          <h3>YAML</h3>
+          <YamlEditor value={yml} onChange={handleChange} />
+        </div>
         {error && <span className={styles.error}>{error}</span>}
 
         <div className={styles.result}>
