@@ -16,18 +16,23 @@ doe:
 `;
 
 const SANBOX_HISTORY_KEY = 'sandbox-history';
+const LAST_WORKING_TREE_KEY = 'last-working-tree';
 
 function App() {
   const [yml, setYml] = useState(
     () => localStorage.getItem(SANBOX_HISTORY_KEY) ?? defaultData
   );
-  const [tree, setTree] = useState('');
+  const [tree, setTree] = useState(
+    () => localStorage.getItem(LAST_WORKING_TREE_KEY) ?? ''
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
       const treeObj = load(yml) as TreeObject;
-      setTree(treeify.asTree(treeObj, false, true));
+      const treeString = treeify.asTree(treeObj, false, true);
+      setTree(treeString);
+      localStorage.setItem(LAST_WORKING_TREE_KEY, treeString);
       setError(null);
     } catch (err) {
       if (err instanceof YAMLException) {
@@ -64,9 +69,13 @@ function App() {
         {error && <span className={styles.error}>{error}</span>}
 
         <div className={styles.result}>
-          <button onClick={handleCopyToClipboard} className={styles.copy}>
-            Copy
-          </button>
+          <div className={styles.header}>
+            <h3>Result</h3>
+
+            <button onClick={handleCopyToClipboard} className={styles.copy}>
+              Copy
+            </button>
+          </div>
 
           <pre>{tree}</pre>
         </div>

@@ -36,6 +36,17 @@ button.copy {
     align-items: flex-end;
 }
 
+.result > .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.result > .header h3 {
+    margin-bottom: 0;
+}
+
 .result pre {
     background-color: #dfe6e9;
     height: 500px;
