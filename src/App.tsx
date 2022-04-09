@@ -1,11 +1,12 @@
 import { load, YAMLException } from 'js-yaml';
 import { useEffect, useState } from 'react';
-import AceEditor from 'react-ace';
 import treeify, { TreeObject } from 'treeify';
+import styles from './App.module.css';
+import YamlEditor from './YamlEditor';
 
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-yaml';
-import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/theme-one_dark';
 
 const defaultData = `hello:
   world:
@@ -37,23 +38,17 @@ function App() {
 
   return (
     <main>
-      <AceEditor
-        mode="yaml"
-        theme="github"
-        tabSize={2}
-        showPrintMargin={false}
-        showGutter={false}
-        value={yml}
-        onChange={setYml}
-        editorProps={{ $blockScrolling: true }}
-      />
+      <h1 className={styles.title}>TREEIFY</h1>
 
-      {error && <span>{error}</span>}
+      <div className={styles.container}>
+        <YamlEditor value={yml} onChange={setYml} />
+        {error && <span className={styles.error}>{error}</span>}
 
-      <div>
-        <button onClick={handleCopyToClipboard}>Copy</button>
+        <div className={styles.result}>
+          <button onClick={handleCopyToClipboard}>Copy</button>
 
-        <pre>{tree}</pre>
+          <pre>{tree}</pre>
+        </div>
       </div>
     </main>
   );
